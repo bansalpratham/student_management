@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import com.example.ucs067.studentmanagement.repository.CourseRepository;
 
 
 @RestController
@@ -23,9 +24,14 @@ public class HelloController {
 
     private final StudentRepository studentRepository;
 
-    public HelloController(StudentRepository studentRepository) {
+    public HelloController(
+            StudentRepository studentRepository,
+            CourseRepository courseRepository) {
+
         this.studentRepository = studentRepository;
+        this.courseRepository = courseRepository;
     }
+
 
     @GetMapping("/hello")
     public String hello() {
@@ -116,5 +122,24 @@ public class HelloController {
     public List<Student> getStudentsSortedByName() {
         return studentRepository.findAll(Sort.by("name"));
     }
+
+    @GetMapping("/courses")
+    public List<Course> getCourses() {
+        return courseRepository.findAll();
+    }
+    @PostMapping("/students/{studentId}/courses")
+    public ResponseEntity<Course> addCourseToStudent(
+            @PathVariable int studentId,
+            @RequestBody Course course) {
+
+        return studentRepository.findById(studentId)
+                .map(student -> {
+                    course.setStudent(student);
+                    Course savedCourse = courseRepository.save(course);
+                    return ResponseEntity.ok(savedCourse);
+                })
+                .orElse(ResponseEntity.notFound().build());
+    }
+
 
 }
