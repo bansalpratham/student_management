@@ -10,6 +10,10 @@ import jakarta.persistence.OneToMany;
 import java.util.ArrayList;
 import java.util.List;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Positive;
+
 
 
 @Entity
@@ -18,8 +22,16 @@ public class Student {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+
+    @Id
+    @Positive(message = "Student ID must be a positive number")
     private Integer id;
+
+    @NotBlank(message = "Student name is required")
     private String name;
+
+    @NotBlank(message = "Student email is required")
+    @Email(message = "Please provide a valid email address")
     private String email;
 
     @OneToMany(mappedBy = "student", cascade = CascadeType.ALL, orphanRemoval = true)

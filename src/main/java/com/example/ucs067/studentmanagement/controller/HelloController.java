@@ -17,6 +17,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import com.example.ucs067.studentmanagement.repository.CourseRepository;
+import jakarta.validation.Valid;
 
 
 @RestController
@@ -55,9 +56,10 @@ public class HelloController {
 
     // POST - add a new student
     @PostMapping("/students")
-    public Student addStudent(@RequestBody Student student) {
+    public Student addStudent(@Valid @RequestBody Student student) {
         return studentRepository.save(student);
     }
+
 
     // GET student by ID
     @GetMapping("/students/{id}")
