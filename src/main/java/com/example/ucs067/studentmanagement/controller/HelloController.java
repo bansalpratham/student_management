@@ -13,6 +13,10 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+
 
 @RestController
 public class HelloController {
@@ -87,4 +91,30 @@ public class HelloController {
 
         return ResponseEntity.ok("Student deleted successfully");
     }
+
+    @GetMapping("/students/search/name/{name}")
+    public List<Student> searchByName(@PathVariable String name) {
+        return studentRepository.findByName(name);
+    }
+
+    @GetMapping("/students/search/name/contains/{keyword}")
+    public List<Student> searchByNameContaining(@PathVariable String keyword) {
+        return studentRepository.findByNameContaining(keyword);
+    }
+
+    @GetMapping("/students/search/email/{email}")
+    public List<Student> searchByEmail(@PathVariable String email) {
+        return studentRepository.findByEmail(email);
+    }
+
+    @GetMapping("/students/page")
+    public Page<Student> getStudentsPage(Pageable pageable) {
+        return studentRepository.findAll(pageable);
+    }
+
+    @GetMapping("/students/sort/name")
+    public List<Student> getStudentsSortedByName() {
+        return studentRepository.findAll(Sort.by("name"));
+    }
+
 }
